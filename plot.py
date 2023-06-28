@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 plt.rcParams.update({"font.size": 22})
-# make the plot bigger
-plt.rcParams["figure.figsize"] = (20, 10)
 
 
 def plot_coefficients(r):
@@ -20,12 +18,21 @@ def plot_coefficients(r):
         return result
 
     abs_coefficient = lambda n: np.abs(coefficient(n) ** 2)
-    n = np.arange(0, 32, 2)
-    plt.scatter(n, [abs_coefficient(i) for i in n])
+    n = np.arange(0, 20, 2)
+    plt.scatter(n, [abs_coefficient(i) for i in n], label="Theoretical predication")
     plt.xlabel("n")
     plt.ylabel("Probability of n photons")
-    plt.show()
+
+
+def plot_experiment_data():
+    data = pd.read_csv(r"data/p_n_chances.csv", names=["n", "p(n)"])
+    plt.scatter(data["n"], data["p(n)"], label="Experimental data")
+    plt.xlabel("n")
+    plt.ylabel("Probability of n photons")
 
 
 if __name__ == "__main__":
-    plot_coefficients(r=10)
+    plot_experiment_data()
+    plot_coefficients(r=2.26)
+    plt.legend()
+    plt.show()
