@@ -79,10 +79,11 @@ def plot_variance_to_phi_experimental_data():
     plt.ylabel("Variance [dB]")
 
 
-def plot_variance_to_phi_theory(efficiency, x_b_variance):
-    p_b_variance = -x_b_variance * 3.1
+def plot_variance_to_phi_theory(efficiency, squeezed_quadrature_variance):
+    anti_squeezed_quadrature_variance = -squeezed_quadrature_variance * 3.1
     variance = lambda phi: efficiency * (
-        x_b_variance * np.sin(phi) ** 2 + p_b_variance * np.cos(phi) ** 2
+        squeezed_quadrature_variance * np.sin(phi) ** 2
+        + anti_squeezed_quadrature_variance * np.cos(phi) ** 2
     ) + (1 - efficiency) * (1 / 2)
     phi = np.linspace(0, 2 * np.pi, 100)
     plt.plot(phi, variance(phi), label="Theoretical prediction", color="red")
@@ -90,7 +91,11 @@ def plot_variance_to_phi_theory(efficiency, x_b_variance):
 
 def plot_variance_to_phi():
     plot_variance_to_phi_experimental_data()
-    plot_variance_to_phi_theory(efficiency=0.88, x_b_variance=-2.88)
+    plot_variance_to_phi_theory(efficiency=0.88, squeezed_quadrature_variance=-2.8)
+    plt.xticks(
+        [0, np.pi / 2, np.pi, 3 * np.pi / 2, 2 * np.pi],
+        [0, r"$\pi/2$", r"$\pi$", r"$3\pi/2$", r"$2\pi$"],
+    )
     plt.legend()
     plt.show()
 
@@ -102,5 +107,35 @@ def plot_squeezed_vs_anti_squeezed():
     plt.show()
 
 
+def plot_histogram(x_b_variance, p_b_variance, efficiency):
+    variance_in_db = lambda phi: efficiency * (
+        x_b_variance * np.sin(phi) ** 2 + p_b_variance * np.cos(phi) ** 2
+    ) + (1 - efficiency) * (1 / 2)
+    variance = lambda phi: 10 ** (-variance_in_db(phi) / 10) / 2
+    phis = np.linspace(0, 2 * np.pi, 100)
+    phi_to_hist = {}
+    for phi in phis:
+        samples = np.random.normal(0, np.sqrt(variance(phi)), 1000000)
+        phi_to_hist[phi] = np.histogram(samples, bins=1000, density=True)[0]
+    plt.rcParams["image.cmap"] = "hot"
+    # plot 2d heat map
+    plt.imshow(
+        np.array(list(phi_to_hist.values())).T,
+        extent=[0, 2 * np.pi, -3, 3],
+        aspect="auto",
+        origin="lower",
+    )
+    plt.xlabel(r"$\phi$")
+    plt.ylabel("x")
+    plt.xticks(
+        [0, np.pi / 2, np.pi, 3 * np.pi / 2, 2 * np.pi],
+        [0, r"$\pi/2$", r"$\pi$", r"$3\pi/2$", r"$2\pi$"],
+    )
+    plt.colorbar()
+    plt.show()
+
+
 if __name__ == "__main__":
     plot_variance_to_phi()
+    # plot_histogram(x_b_variance=-2.8, p_b_variance=2.8 * 3.1, efficiency=0.88)
+    # plot_histogram(x_b_variance=0, p_b_variance=0, efficiency=0.88)
