@@ -72,9 +72,35 @@ def plot_p_n():
     plt.show()
 
 
-if __name__ == "__main__":
+def plot_variance_to_phi_experimental_data():
+    data = pd.read_csv(r"data/variance_to_phi.csv", names=["phi", "variance"])
+    plt.scatter(data["phi"], data["variance"], label="Experimental data")
+    plt.xlabel(r"$\phi$")
+    plt.ylabel("Variance [dB]")
+
+
+def plot_variance_to_phi_theory(efficiency, x_b_variance):
+    p_b_variance = -x_b_variance * 3.1
+    variance = lambda phi: efficiency * (
+        x_b_variance * np.sin(phi) ** 2 + p_b_variance * np.cos(phi) ** 2
+    ) + (1 - efficiency) * (1 / 2)
+    phi = np.linspace(0, 2 * np.pi, 100)
+    plt.plot(phi, variance(phi), label="Theoretical prediction", color="red")
+
+
+def plot_variance_to_phi():
+    plot_variance_to_phi_experimental_data()
+    plot_variance_to_phi_theory(efficiency=0.88, x_b_variance=-2.88)
+    plt.legend()
+    plt.show()
+
+
+def plot_squeezed_vs_anti_squeezed():
     plot_squeezed_vs_anti_squeezed_data()
     plot_squeezed_vs_anti_squeezed_theory()
     plt.legend()
     plt.show()
-    # plot_p_n()
+
+
+if __name__ == "__main__":
+    plot_variance_to_phi()
