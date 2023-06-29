@@ -136,6 +136,8 @@ def plot_histogram(x_b_variance, p_b_variance, efficiency):
 
 
 if __name__ == "__main__":
+    plot_p_n()
     plot_variance_to_phi()
-    # plot_histogram(x_b_variance=-2.8, p_b_variance=2.8 * 3.1, efficiency=0.88)
-    # plot_histogram(x_b_variance=0, p_b_variance=0, efficiency=0.88)
+    plot_squeezed_vs_anti_squeezed()
+    plot_histogram(x_b_variance=0.25, p_b_variance=0.25, efficiency=0.88)
+    plot_histogram(x_b_variance=-2.8, p_b_variance=2.8 * 3.1, efficiency=0.88)
