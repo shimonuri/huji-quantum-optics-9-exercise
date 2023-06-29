@@ -115,7 +115,7 @@ def plot_histogram(x_b_variance, p_b_variance, efficiency):
     phis = np.linspace(0, 2 * np.pi, 100)
     phi_to_hist = {}
     for phi in phis:
-        samples = np.random.normal(0, np.sqrt(variance(phi)), 1000000)
+        samples = np.random.normal(0, np.sqrt(variance(phi)), 100000)
         phi_to_hist[phi] = np.histogram(samples, bins=1000, density=True)[0]
     plt.rcParams["image.cmap"] = "hot"
     # plot 2d heat map
@@ -137,7 +137,7 @@ def plot_histogram(x_b_variance, p_b_variance, efficiency):
 
 if __name__ == "__main__":
     plot_p_n()
-    plot_variance_to_phi()
     plot_squeezed_vs_anti_squeezed()
+    plot_variance_to_phi()
     plot_histogram(x_b_variance=0.25, p_b_variance=0.25, efficiency=0.88)
     plot_histogram(x_b_variance=-2.8, p_b_variance=2.8 * 3.1, efficiency=0.88)
