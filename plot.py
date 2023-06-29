@@ -31,8 +31,50 @@ def plot_experiment_data():
     plt.ylabel("Probability of n photons")
 
 
-if __name__ == "__main__":
+def plot_squeezed_vs_anti_squeezed_data():
+    squeezed_state = pd.read_csv(
+        r"data/fig_3_squeezed.csv", names=["alpha", "squeezing (db)"]
+    )
+    anti_squeezed_state = pd.read_csv(
+        r"data/fig_3_anti_squeezed.csv", names=["alpha", "squeezing (db)"]
+    )
+    plt.scatter(
+        anti_squeezed_state["alpha"],
+        anti_squeezed_state["squeezing (db)"],
+        label="Anti-squeezed state (data)",
+    )
+    plt.scatter(
+        squeezed_state["alpha"],
+        squeezed_state["squeezing (db)"],
+        label="Squeezed state (data)",
+    )
+    plt.xlabel(r"$\alpha$")
+    plt.ylabel("squeezing (db)")
+    plt.axhline(y=0, color="black", linestyle="--", label="Zero point motion")
+
+
+def plot_squeezed_vs_anti_squeezed_theory():
+    anti_squeezed = lambda alpha: -np.log10((1 - alpha) / (1 + alpha)) * 10
+    squeezed = lambda alpha: -np.log10((1 + alpha) / (1 - alpha)) * 10
+    alpha = np.linspace(0.01, 0.99, 100)
+    plt.plot(
+        alpha,
+        anti_squeezed(alpha),
+        label="Theoretical prediction for anti-squeezed",
+    )
+    plt.plot(alpha, squeezed(alpha), label="Theoretical prediction for squeezed")
+
+
+def plot_p_n():
     plot_experiment_data()
     plot_coefficients(r=2.26)
     plt.legend()
     plt.show()
+
+
+if __name__ == "__main__":
+    plot_squeezed_vs_anti_squeezed_data()
+    plot_squeezed_vs_anti_squeezed_theory()
+    plt.legend()
+    plt.show()
+    # plot_p_n()
